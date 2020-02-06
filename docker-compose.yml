@@ -17,10 +17,10 @@ services:
     environment:
       #KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: INSIDE://:9092
+      KAFKA_LISTENERS: INSIDE://_{HOSTNAME_COMMAND}:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_GENERATED_HOSTNAME: _{HOSTNAME_COMMAND}
-      HOSTNAME_COMMAND: printf '%s_%s' kafka $$(docker inspect -f '{{index .Config.Labels "com.docker.compose.container-number"}}' $$HOSTNAME)
+      HOSTNAME_COMMAND: printf '%s.%s' $$( docker inspect -f '{{ .Name }}' $$HOSTNAME | tr -d '/') $$( docker inspect -f '{{ .HostConfig.NetworkMode }}' $$HOSTNAME)
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
