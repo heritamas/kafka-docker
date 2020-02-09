@@ -1,4 +1,7 @@
-version: '2'
+version: '3'
+volumes:
+  kafka:
+  zookeeper:
 services:
   dns:
     image: andyshinn/dnsmasq
@@ -9,7 +12,9 @@ services:
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
-      - "2181:2181"
+      - "2181"
+    volumes:
+    - zookeeper:/opt/zookeeper-3.4.13/data
   kafka:
     build: .
     ports:
@@ -24,3 +29,4 @@ services:
       HOSTNAME_COMMAND: printf '%s.%s' $$( docker inspect -f '{{ .Name }}' $$HOSTNAME | tr -d '/') $$( docker inspect -f '{{ .HostConfig.NetworkMode }}' $$HOSTNAME)
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - kafka:/kafka
