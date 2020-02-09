@@ -1,18 +1,25 @@
-version: '3.2'
+version: '3.7'
 volumes:
   kafka:
+    name: '{{.Service.Name}}-{{.Task.Slot}}-vol'
   zookeeper:
 services:
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
-      - "2181:2181"
+      - target: 2181
+        published: 2181
+        mode: host
+        protocol: tcp
     volumes:
     - zookeeper:/opt/zookeeper-3.4.13/data
   kafka:
     image: wurstmeister/kafka:latest
     ports:
-      - "9094:9094"
+      - target: 9094
+        published: 9094
+        mode: host
+        protocol: tcp
     environment:
       HOSTNAME_COMMAND: "docker info | grep ^Name: | cut -d' ' -f 2"
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
