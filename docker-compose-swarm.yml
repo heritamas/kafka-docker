@@ -32,10 +32,10 @@ services:
         mode: host
         protocol: tcp
     volumes:
-    - zookeeper:/opt/zookeeper-3.4.13/data
+      - zookeeper:/opt/zookeeper-3.4.13/data
   kafka:
     image: wurstmeister/kafka:latest
-    #hostname: '{{.Node.Hostname}}'
+    #hostname: 'docker-{{.Node.Hostname}}'
     deploy:
       replicas: 3
       #preferences:
@@ -54,6 +54,7 @@ services:
       KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://{{.Node.Hostname}}:9094
       KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_LOG_DIRS: /kafka/kafka-logs
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - kafka:/kafka
